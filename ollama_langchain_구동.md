@@ -97,9 +97,9 @@
 ## 1. Huging Face에서 한국어 적용 모델 다운로드
 1. **한국어 적용 모델 검색**
 * `llama3.2 korean` 등의 키워드를 통해 한국어 모델 검색
-    * 예시
-    [llama3.2 한국어 적용 모델 1](https://huggingface.co/RichardErkhov/June-J_-_Llama-3.2-1B_korean_1930_novel-gguf)
-    [llama3.2 한국어 적용 모델 2](https://huggingface.co/Tedhong/Llama-3.2-Korean-GGACHI-1B-Instruct-v1-Q4_K_M-GGUF)
+    * 예시   
+    [llama3.2 한국어 적용 모델 1](https://huggingface.co/RichardErkhov/June-J_-_Llama-3.2-1B_korean_1930_novel-gguf)   
+    [llama3.2 한국어 적용 모델 2](https://huggingface.co/Tedhong/Llama-3.2-Korean-GGACHI-1B-Instruct-v1-Q4_K_M-GGUF)   
     > **참고:**   
     > 모델에 q0, q1 등의 표시가 있는데 이는 양자화(Quantization) 표시이다.
     > 자세한 내용은 [블로그 참조](https://dytis.tistory.com/72)   

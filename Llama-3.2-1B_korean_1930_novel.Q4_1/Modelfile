@@ -1,0 +1,10 @@
+FROM Llama-3.2-1B_korean_1930_novel.Q4_1.gguf
+
+TEMPLATE """[INST] {{ if and .First .System }}<<SYS>>{{ .System }}<</SYS>>
+
+{{ end }}{{ .Prompt }} [/INST] """
+SYSTEM """"""
+PARAMETER stop [INST]
+PARAMETER stop [/INST]
+PARAMETER stop <<SYS>>
+PARAMETER stop <</SYS>>

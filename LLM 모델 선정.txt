@@ -1,0 +1,44 @@
+0. 올라마(ollama) 설치
+올라마를 통해 로컬에서 LLM을 구동시킬 수 있다.
+https://codingopera.tistory.com/77
+
+1. 모델 선택
+라마(llama)3.1 8B vs 라마3.2 1B 또는 3B
+-> 이 부분은 직접 테스트 해봐야 성능 차이나 사양 차이를 확인할 수 있을 것 같음
+
+2. 선택한 모델 base로 한국어 학습이 되어있는 모델 찾기
+hugging face에서 라마 베이스로 한국어 학습 되어있는 모델 찾기
+
+ex)
+- https://huggingface.co/sh2orc/Llama-3.1-Korean-8B-Instruct
+- https://huggingface.co/Jong1snu/Llama-3.2-1B_korean_novel
+- https://huggingface.co/Saxo/Linkbricks-Llama3.2-Korean-cpt-3b
+
+3. 선정 모델을 바탕으로 말투 학습 진행
+말투 학습에 사용할 수 있는 방식
+1. fine-tuning
+  - 특정 인물의 말투를 깊이 반영하여 높은 정확도와 일관성을 보장.
+  - 새로운 말투나 표현을 추가하려면 다시 Fine-Tuning이 필요.
+2. prompt engineering
+  - Fine-Tuning 없이 기존 모델을 활용하므로 비용과 시간이 절약.
+  - 말투를 변경하거나 추가하는 데 유연성이 높음.
+  - 특정 인물의 말투를 완벽히 재현하기 어려움.
+3. RAG(Retrieval-Augmented Generation)
+  - 외부 데이터베이스를 갱신함으로써 지속적인 업데이트 가능.
+  - Fine-Tuning이 필요 없으므로 구현 비용이 낮음.
+  - 실시간 검색과 응답 생성 간의 지연 가능성.
+  - 데이터베이스 구축 및 관리가 필요.
+
+가장 완벽하게 구현할 수 있는 방법은 fine-tuning 방법
+fine-tuning방식 중, full tuning 대신 PEFT(Parameter Efficient Fine-Tuning) 방식을 사용
+PEFT 방식 중 QLoRA(Quantized Low-Rank Adaptation) 방식을 사용
+
+ex) 파인튜닝
+- https://heegyukim.medium.com/korean-smilestyle-dataset%EC%9C%BC%EB%A1%9C-%EB%AC%B8%EC%B2%B4-%EC%8A%A4%ED%83%80%EC%9D%BC%EC%9D%84-%EB%B0%94%EA%BE%B8%EB%8A%94-%EB%AA%A8%EB%8D%B8-%EB%A7%8C%EB%93%A4%EC%96%B4%EB%B3%B4%EA%B8%B0-d15d32a2c303
+- https://magoker.tistory.com/311
+
+4. 학습 완료된 모델을 올라마에 로딩시켜 사용
+모델을 학습하면 보통 .gguf 파일이 생성
+이를 올라마에 로딩해서 사용 및 챗 서버 구현
+
+ex) https://usingsystem.tistory.com/530

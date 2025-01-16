@@ -94,4 +94,65 @@
 ---
 
 # Hugging Face 모델을 Ollama에서 사용하는 방법
-* 추후 업데이트 예정
+## 1. Huging Face에서 한국어 적용 모델 다운로드
+1. **한국어 적용 모델 검색**
+* `llama3.2 korean` 등의 키워드를 통해 한국어 모델 검색
+    * 예시
+    [llama3.2 한국어 적용 모델 1](https://huggingface.co/RichardErkhov/June-J_-_Llama-3.2-1B_korean_1930_novel-gguf)
+    [llama3.2 한국어 적용 모델 2](https://huggingface.co/Tedhong/Llama-3.2-Korean-GGACHI-1B-Instruct-v1-Q4_K_M-GGUF)
+    > **참고:**   
+    > 모델에 q0, q1 등의 표시가 있는데 이는 양자화(Quantization) 표시이다.
+    > 자세한 내용은 [블로그 참조](https://dytis.tistory.com/72)   
+
+2. **GGUF 파일 다운로드**
+Ollama에 적용하기 위해서는 GGUF 파일을 다운로드 해야 한다.
+
+## 2. Ollama에 모델 설치 방법
+1. **GGUF 파일 저장 폴더 생성**
+* GGUF 파일을 보관할 폴더를 생성
+* 예시:
+    * 모델명 : `Llama-3.2-1B_korean_1930_novel.Q4_1.gguf`
+    * path : `D:\desktop\git\brain_in_a_vat\Llama-3.2-1B_korean_1930_novel.Q4_1`
+
+2. **Modelfile 작성**
+* GGUF 파일이 저장되어 있는 폴더에 Modelfile 생성(GGUF 모델과 같은 path에 있어야 한다)
+* 아래 내용을 입력
+    > 이때 FROM 에는 GGUF 모델명을 입력
+    ```bash
+    FROM Llama-3.2-1B_korean_1930_novel.Q4_1.gguf
+
+    TEMPLATE """[INST] {{ if and .First .System }}<<SYS>>{{ .System }}<</SYS>>
+
+    {{ end }}{{ .Prompt }} [/INST] """
+    SYSTEM """"""
+    PARAMETER stop [INST]
+    PARAMETER stop [/INST]
+    PARAMETER stop <<SYS>>
+    PARAMETER stop <</SYS>>
+    ```
+    > 각 키워드에 대한 설명은 추후 설명
+
+3. **Ollama에 해당 모델 설치**
+* `ollama create` 명령어를 통해 모델을 설치
+    ```bash
+    D:\>cd D:\desktop\git\brain_in_a_vat
+
+    D:\desktop\git\brain_in_a_vat>ollama create llama3.2_1B_korean_novel_q4_1 -f ./Llama-3.2-1B_korean_1930_novel.Q4_1/Modelfile
+    gathering model components
+    copying file sha256:8007280587ed4edb3660f3a47f34fa17e180702f23923b0ef8d1dcfa91e62003 100%
+    parsing GGUF
+    using existing layer sha256:8007280587ed4edb3660f3a47f34fa17e180702f23923b0ef8d1dcfa91e62003
+    using existing layer sha256:ab982f1f28716f4591b9fa783658f500049f4f1e933e38cde531780aec35fe43
+    using existing layer sha256:fa304d6750612c207b8705aca35391761f29492534e90b30575e4980d6ca82f6
+    writing manifest
+    success
+
+    D:\desktop\git\brain_in_a_vat>ollama list
+    NAME                                     ID              SIZE      MODIFIED
+    llama3.2_1B_korean_novel_q4_1:latest     d386b927027e    869 MB    2 seconds ago
+    llama3.2:latest                          a80c4f17acd5    2.0 GB    3 hours ago
+    llama3.2:3B                              a80c4f17acd5    2.0 GB    3 hours ago
+    ```
+
+4. **langchain으로 해당 모델 사용**
+* `python을 통해 Ollama와 통신하기기`를 참고하여 코드 작성 및 실행

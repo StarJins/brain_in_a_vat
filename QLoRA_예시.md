@@ -1,9 +1,9 @@
-### QLoRA 란
+# QLoRA 란
 - PEFT의 한 종류
 - LoRA에 4비트 양자화를 적용하여 더욱 경량화한 방법
 
-### QLoRA 학습 전 테스트
-# 1. 모듈 다운로드 및 import
+# QLoRA 학습 전 테스트
+### 1. 모듈 다운로드 및 import
 ```bash
 !pip install -q -U datasets
 !pip install -q -U bitsandbytes
@@ -35,7 +35,7 @@ from peft import (
 )
 from trl import SFTTrainer
 ```
-# 2. 모델 및 토크나이저 불러오기
+### 2. 모델 및 토크나이저 불러오기
 - 모델은 우선 llama3.2를 기준으로 설명
     ```python
     BASE_MODEL = "llama3.2"
@@ -44,7 +44,7 @@ from trl import SFTTrainer
     tokenizer = AutoTokenizer.from_pretrained(BASE_MODEL)
     ```
 
-# 3. 모델 테스트
+### 3. 모델 테스트
 ```python
 prompt = "한국의 아이돌 문화에 대해 알려줘."
 
@@ -62,8 +62,8 @@ outputs = pipe(
 print(outputs[0]["generated_text"][len(prompt):]) # 입력 프롬프트 이후에 생성된 텍스트만 출력
 ```
 
-### 학습 데이터셋 준비
-# 1. 모듈 불러오기
+# 학습 데이터셋 준비
+### 1. 모듈 불러오기
 ```python
 import os
 import torch
@@ -73,7 +73,7 @@ from datasets import load_dataset, Dataset, concatenate_datasets
 from transformers import AutoModelForCausalLM, AutoTokenizer
 ```
 
-# 2. KoAlpaca 데이터셋 불러오기
+### 2. KoAlpaca 데이터셋 불러오기
 - KoAlpaca 데이터셋은 지식인 기반 질문-답변 데이터셋
     ```python
     dataset_koalpaca = load_dataset("beomi/KoAlpaca-v1.1a")
@@ -98,8 +98,8 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
     dataset_koalpaca.save_to_disk("datasets/koalpaca_dataset")
     ```
 
-### QLoRA로 파인튜닝 시작하기
-# 1. 데이터셋 및 모델 불러오기
+# QLoRA로 파인튜닝 시작하기
+### 1. 데이터셋 및 모델 불러오기
 ```python
 # 데이터셋 로드
 dataset_path = "datasets/koalpaca_dataset"
@@ -121,7 +121,7 @@ model = AutoModelForCausalLM.from_pretrained(
 )
 ```
 
-# 2. 학습 프롬프트 생성
+### 2. 학습 프롬프트 생성
 ```python
 prompt_input_template = """아래는 작업을 설명하는 지시사항과 추가 정보를 제공하는 입력이 짝으로 구성됩니다. 이에 대한 적절한 응답을 작성해주세요.
 
@@ -174,7 +174,7 @@ remove_column_keys = dataset_cvted.features.keys()
 dataset_tokenized = dataset_cvted.map(tokenize_function, batched=True, remove_columns=remove_column_keys)
 ```
 
-# 3. QLoRA 설정
+### 3. QLoRA 설정
 - QLoRA 파라미터 설정
     ```python
     lora_config = LoraConfig(
@@ -196,7 +196,7 @@ dataset_tokenized = dataset_cvted.map(tokenize_function, batched=True, remove_co
     model.print_trainable_parameters()
     ```
 
-# 4. Trainer 설정 및 실행
+### 4. Trainer 설정 및 실행
 - HuggingFace의 transformers 라이브러리에서 제공하는 트레이너 클래스 사용하여 학습
 - max_steps를 컴퓨터 사양에 따라 설정
     ```python
@@ -241,8 +241,8 @@ dataset_tokenized = dataset_cvted.map(tokenize_function, batched=True, remove_co
     trainer.model.save_pretrained(FINETUNED_MODEL)
     ```
 
-### QLoRA 파인튜닝 모델 테스트
-# 1. 모델 불러오기
+# QLoRA 파인튜닝 모델 테스트
+### 1. 모델 불러오기
 ```python
 FINETUNED_MODEL = "./eeve_qlora"
 
@@ -266,7 +266,7 @@ peft_model = PeftModel.from_pretrained(model, FINETUNED_MODEL, torch_dtype=torch
 merged_model = peft_model.merge_and_unload()
 ```
 
-# 2. 모델 실행
+### 2. 모델 실행
 ```python
 prompt = "한국의 아이돌 문화에 대해 알려줘."
 
@@ -284,5 +284,5 @@ outputs = pipe(
 print(outputs[0]["generated_text"][len(prompt):])
 ```
 
-### 출처
+# 출처
 - [QLoRA로 학습하기](https://blog.kbanknow.com/82)

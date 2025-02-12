@@ -112,14 +112,14 @@ def train():
     model.print_trainable_parameters()  # trainable params: 6,078,464 || all params: 3,218,828,288 || trainable%: 0.1888
 
     train_args = transformers.TrainingArguments(
-        per_device_train_batch_size=1, # 각 디바이스당 배치 사이즈. 작을수록(1~2) 좀 더 빠르게 alignment 됨
-        gradient_accumulation_steps=4, 
-        warmup_steps=1,
-        #num_train_epochs=1,
-        max_steps=50, 
-        learning_rate=2e-4, # 학습률
-        fp16=True,
-        output_dir="outputs",
+        per_device_train_batch_size=1, # 각 디바이스(GPU 또는 CPU)에서 한 번에 처리할 샘플(batch) 개수를 설정합니다. 각 디바이스당 배치 사이즈. 작을수록(1~2) 좀 더 빠르게 alignment 됨
+        gradient_accumulation_steps=4, # 그래디언트 업데이트 전에 몇 개의 미니배치를 누적(accumulate)할지 정하는 값입니다. 예를 들어, per_device_train_batch_size=1이고 gradient_accumulation_steps=4이면, 내부적으로 배치 크기가 1 × 4 = 4처럼 작동합니다.
+        warmup_steps=1, # 학습 초기에 학습률을 천천히 증가시키는 워밍업 스텝 수를 설정합니다.
+        num_train_epochs=5, # 데이터셋을 전체적으로 몇 번 반복할지 정하는 파라미터입니다.
+        # max_steps=50, # num_train_epochs와 다르게, 전체 데이터셋을 몇 번 학습하는지와 관계없이 지정된 스텝 수에 도달하면 학습이 종료 됩니다.
+        learning_rate=2e-4, # 학습률. 학습률이 너무 크면 학습이 불안정하고, 너무 작으면 학습 속도가 느려집니다.
+        fp16=True, # 일반적으로 GPU에서 더 빠르고 적은 메모리를 사용하여 학습 가능합니다.
+        output_dir="outputs", # 모델 가중치, 로그, 체크포인트 등을 저장할 디렉토리를 지정합니다. outputs/ 폴더에 저장
         optim="paged_adamw_8bit", # 8비트 AdamW 옵티마이저
         logging_steps=50, # 로깅 빈도
         save_total_limit=3 # 저장할 체크포인트의 최대 수

@@ -33,14 +33,25 @@ peft_model = PeftModel.from_pretrained(model, FINETUNED_MODEL, torch_dtype=torch
 # QLoRA 가중치를 베이스 모델에 병합
 merged_model = peft_model.merge_and_unload()
 
-prompt = "오늘 출근해야 되네..."
+prompt_input_template = """아래는 작업을 설명하는 지시사항과 추가 정보를 제공하는 입력이 짝으로 구성됩니다. 이에 대한 적절한 응답을 작성해주세요.
+
+### 지시사항:
+{instruction}
+
+### 입력:
+{input}
+
+### 응답:"""
+instruction = "사용자와 점심 메뉴에 대해 대화하세요."
+input = "점심 뭐 먹지?"
+prompt = prompt_input_template.format(instruction=instruction, input=input)
 
 # 텍스트 생성을 위한 파이프라인 설정
 pipe = pipeline("text-generation", model=merged_model, tokenizer=tokenizer, max_new_tokens=256)
 outputs = pipe(
     prompt,
     do_sample=True,
-    temperature=0.2,
+    temperature=0.3,
     top_k=50,
     top_p=0.92,
     repetition_penalty=1.2,

@@ -9,18 +9,18 @@ BASE_MODEL = "Bllossom/llama-3.2-Korean-Bllossom-3B"
 FINETUNED_MODEL = "./sinical-model"
 
 # 베이스 모델 및 토크나이저 로드
-# nf4_config = BitsAndBytesConfig(
-#     load_in_4bit=True, # 모델을 4비트 정밀도로 로드
-#     bnb_4bit_quant_type="nf4", # 4비트 NormalFloat 양자화: 양자화된 파라미터의 분포 범위를 정규분포 내로 억제하여 정밀도 저하 방지
-#     bnb_4bit_use_double_quant=True, # 이중 양자화: 양자화를 적용하는 정수에 대해서도 양자화 적용
-#     bnb_4bit_compute_dtype=torch.bfloat16 # 연산 속도를 높이기 위해 사용 (default: torch.float32)
-# )
+nf4_config = BitsAndBytesConfig(
+    load_in_4bit=True, # 모델을 4비트 정밀도로 로드
+    bnb_4bit_quant_type="nf4", # 4비트 NormalFloat 양자화: 양자화된 파라미터의 분포 범위를 정규분포 내로 억제하여 정밀도 저하 방지
+    bnb_4bit_use_double_quant=True, # 이중 양자화: 양자화를 적용하는 정수에 대해서도 양자화 적용
+    bnb_4bit_compute_dtype=torch.bfloat16 # 연산 속도를 높이기 위해 사용 (default: torch.float32)
+)
 
 peft_config = PeftConfig.from_pretrained(FINETUNED_MODEL)
 model = AutoModelForCausalLM.from_pretrained(
     peft_config.base_model_name_or_path,
-    # quantization_config=nf4_config,
-    device_map="cuda",
+    quantization_config=nf4_config,
+    device_map="auto",
     torch_dtype=torch.bfloat16
 )
 tokenizer = AutoTokenizer.from_pretrained(
@@ -42,8 +42,8 @@ prompt_input_template = """아래는 작업을 설명하는 지시사항과 추�
 {input}
 
 ### 응답:"""
-instruction = "질문에 대해 답변한다."
-input = "1+1은 몇이야?"
+instruction = "사용자와 점심 메뉴에 대해 대화하세요."
+input = "점심 뭐 먹지?"
 prompt = prompt_input_template.format(instruction=instruction, input=input)
 
 # 텍스트 생성을 위한 파이프라인 설정

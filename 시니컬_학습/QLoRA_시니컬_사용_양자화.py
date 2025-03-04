@@ -26,6 +26,7 @@ model = AutoModelForCausalLM.from_pretrained(
 tokenizer = AutoTokenizer.from_pretrained(
     peft_config.base_model_name_or_path
 )
+tokenizer.pad_token_id = tokenizer.eos_token_id
 
 # QLoRA 모델 로드
 peft_model = PeftModel.from_pretrained(model, FINETUNED_MODEL, torch_dtype=torch.bfloat16)
@@ -57,4 +58,7 @@ outputs = pipe(
     repetition_penalty=1.2,
     add_special_tokens=True 
 )
-print(outputs[0]["generated_text"][len(prompt):])
+
+response = outputs[0]["generated_text"][len(prompt):].strip()
+response = response.replace("<|im_end|>", "").strip()
+print(response)

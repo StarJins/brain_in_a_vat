@@ -1,5 +1,7 @@
 {
     "rust-analyzer.linkedProjects": [
-        "D:/desktop/git/brain_in_a_vat/rust/hello/Cargo.toml"
+        "D:/desktop/git/brain_in_a_vat/rust/hello/Cargo.toml",
+        "D:/desktop/git/brain_in_a_vat/rust/server/Cargo.toml",
+        "D:/desktop/git/brain_in_a_vat/rust/client/Cargo.toml"
     ]
 }

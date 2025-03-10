@@ -1,0 +1,29 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug Rust Project",
+            "type": "lldb",
+            "request": "launch",
+            "program": "D:/desktop/git/brain_in_a_vat/rust/${input:rustProjectName}/target/debug/${input:rustProjectName}.exe",
+            "args": [],
+            "cwd": "D:/desktop/git/brain_in_a_vat/rust/${input:rustProjectName}",
+            "preLaunchTask": "Build Rust Project",  // 주석처리하면 빌드, 디버깅을 따로할 수 있음
+            "console": "integratedTerminal",
+            "sourceLanguages": ["rust"]
+        }
+    ],
+    "inputs": [
+        {
+            "id": "rustProjectName",
+            "type": "pickString",
+            "description": "Select the Rust project",
+            "options": [
+                "hello",
+                "test1",
+                "test2",
+                "test3"
+            ]
+        }
+    ]
+}

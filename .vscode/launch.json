@@ -20,9 +20,8 @@
             "description": "Select the Rust project",
             "options": [
                 "hello",
-                "test1",
-                "test2",
-                "test3"
+                "server",
+                "client"
             ]
         }
     ]
